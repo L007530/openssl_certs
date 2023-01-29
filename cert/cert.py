@@ -35,7 +35,7 @@ class Certificate:
             f.write(key.private_bytes(
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PrivateFormat.TraditionalOpenSSL,
-                encryption_algorithm=serialization.BestAvailableEncryption(b"lilly123"),
+                encryption_algorithm=serialization.BestAvailableEncryption(b"PASSCODE"),
             ))
         return key
 
