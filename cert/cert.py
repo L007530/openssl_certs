@@ -24,8 +24,8 @@ class Certificate:
             # print(f'Existed path: {path}, would not create')
             return path
 
-    # Generate our key
-    def generate_key(self, key_path='key.pem'):
+    # Generate encrypted private key as ca.key
+    def generate_key(self, key_path='ca.key'):
         key = rsa.generate_private_key(
             public_exponent=65537,
             key_size=2048,
@@ -35,11 +35,29 @@ class Certificate:
             f.write(key.private_bytes(
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PrivateFormat.TraditionalOpenSSL,
-                encryption_algorithm=serialization.BestAvailableEncryption(b"PASSCODE"),
+                encryption_algorithm=serialization.BestAvailableEncryption(b"lilly123"),
+                # encryption_algorithm=serialization.NoEncryption(),
             ))
+        self.convert_key_to_nonencrypted()
         return key
 
-    # Generate a CSR
+    # Save none encrypted private key as key.pem
+    def convert_key_to_nonencrypted(self, key_path='ca.key', nonencrypted_key_path='key.pem'):
+        with open(f"{Certificate.create_dir_if_not_exist(self.path)}/{key_path}", "rb") as key_file:
+            private_key = serialization.load_pem_private_key(
+                key_file.read(),
+                password=b"lilly123",
+            )
+
+        with open(f"{Certificate.create_dir_if_not_exist(self.path)}/{nonencrypted_key_path}", "wb") as f:
+            f.write(private_key.private_bytes(
+                encoding=serialization.Encoding.PEM,
+                format=serialization.PrivateFormat.TraditionalOpenSSL,
+                # encryption_algorithm=serialization.BestAvailableEncryption(b"lilly123"),
+                encryption_algorithm=serialization.NoEncryption(),
+            ))
+
+    # Generate a CSR as csr.pem
     def generate_csr(self, key, csr_path='csr.pem'):
         csr = x509.CertificateSigningRequestBuilder().subject_name(x509.Name([
             # Provide various details about who we are.
@@ -63,6 +81,7 @@ class Certificate:
         with open(f"{Certificate.create_dir_if_not_exist(self.path)}/{csr_path}", "wb") as f:
             f.write(csr.public_bytes(serialization.Encoding.PEM))
 
+    # Generate self signed cert as certificate.pem
     def generate_self_signed_cert(self, key, cert_path='certificate.pem'):
         # Various details about who we are. For a self-signed certificate the
         # subject and issuer are always the same.
@@ -99,10 +118,11 @@ class Certificate:
 
 
 if __name__ == "__main__":
-    dir_path = 'test123.lilly.com'
-    cert_url = u'test123.lilly.com'
-
-    cert = Certificate(path=dir_path, cert_url=cert_url)
-    p_key = cert.generate_key()
-    cert.generate_csr(key=p_key)
-    cert.generate_self_signed_cert(key=p_key)
+    # dir_path = 'test123.lilly.com'
+    # cert_url = u'test123.lilly.com'
+    #
+    # cert = Certificate(path=dir_path, cert_url=cert_url)
+    # p_key = cert.generate_key()
+    # cert.generate_csr(key=p_key)
+    # cert.generate_self_signed_cert(key=p_key)
+    pass
