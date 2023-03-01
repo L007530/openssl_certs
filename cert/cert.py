@@ -24,6 +24,10 @@ class Certificate:
             # print(f'Existed path: {path}, would not create')
             return path
 
+    def generate_readme(self, file_name='readme', line=''):
+        with open(f"{Certificate.create_dir_if_not_exist(self.path)}/{file_name}_{self.cert_url}.txt", "a") as rdm:
+            rdm.write(f"{line}\n")
+
     # Generate encrypted private key as ca.key
     def generate_key(self, key_path='ca.key'):
         key = rsa.generate_private_key(
