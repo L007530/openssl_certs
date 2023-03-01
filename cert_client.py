@@ -19,19 +19,43 @@ class Client(cert.Certificate):
         super().__init__(path, cert_url, self_signed_days)
 
     def create_key_csr(self):
+        # create private key
         p_key = self.generate_key()
-        print(f"Private key: key.pem is created under: {self.path}")
+        print(f"Encrypted Private key: ca.key is created under: {self.path}, passcode: lilly123")
+        print(f"Non-encrypted Private key: key.pem is created under: {self.path}")
+
+        # create public key
         self.generate_csr(p_key)
         print(f"csr: csr.pem is created under: {self.path}, with url: {self.cert_url}")
 
+        # create readme.txt
+        self.generate_readme(line=f"{self.cert_url}\n")
+        self.generate_readme(line="ca.key - Encrypted Private key, passcode: lilly123")
+        self.generate_readme(line="key.pem - Non-encrypted Private key")
+        self.generate_readme(line="csr.pem - Self-signed Public key")
+        print(f"Readme file is created under: {self.path}")
+
     def create_key_csr_cert(self):
+        # create private key
         p_key = self.generate_key()
         print(f"Encrypted Private key: ca.key is created under: {self.path}")
         print(f"Non-encrypted Private key: key.pem is created under: {self.path}")
+
+        # create public key
         self.generate_csr(p_key)
         print(f"csr: csr.pem is created under: {self.path}, with url: {self.cert_url}")
+
+        # create self-signed certificate
         self.generate_self_signed_cert(p_key)
         print(f"Self-signed certificate: certificate.pem is created under: {self.path}, with url: {self.cert_url}")
+
+        # create readme.txt
+        self.generate_readme(line=f"{self.cert_url}\n")
+        self.generate_readme(line="ca.key - Encrypted Private key, passcode: lilly123")
+        self.generate_readme(line="key.pem - Non-encrypted Private key")
+        self.generate_readme(line="csr.pem - Self-signed Public key")
+        self.generate_readme(line="certificate.pem - Self-signed Certificate")
+        print(f"Readme file is created under: {self.path}")
 
 
 if __name__ == "__main__":
