@@ -9,9 +9,10 @@ import os
 
 
 class Certificate:
-    def __init__(self, path, cert_url, self_signed_days=365):
+    def __init__(self, path, cert_url, passphrase, self_signed_days=365):
         self.path = path
         self.cert_url = cert_url
+        self.passphrase = passphrase
         self.self_signed_days = self_signed_days
 
     @staticmethod
@@ -23,6 +24,10 @@ class Certificate:
         elif os.path.exists(path):
             # print(f'Existed path: {path}, would not create')
             return path
+
+    @staticmethod
+    def convert_str_to_bytestr(str_inputed):
+        return bytes(str_inputed, 'utf-8')
 
     def generate_readme(self, file_name='readme', line=''):
         with open(f"{Certificate.create_dir_if_not_exist(self.path)}/{file_name}_{self.cert_url}.txt", "a") as rdm:
@@ -39,8 +44,7 @@ class Certificate:
             f.write(key.private_bytes(
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PrivateFormat.TraditionalOpenSSL,
-                encryption_algorithm=serialization.BestAvailableEncryption(b"lilly123"),
-                # encryption_algorithm=serialization.NoEncryption(),
+                encryption_algorithm=serialization.BestAvailableEncryption(self.passphrase),
             ))
         self.convert_key_to_nonencrypted()
         return key
@@ -50,14 +54,13 @@ class Certificate:
         with open(f"{Certificate.create_dir_if_not_exist(self.path)}/{key_path}", "rb") as key_file:
             private_key = serialization.load_pem_private_key(
                 key_file.read(),
-                password=b"lilly123",
+                password=self.passphrase,
             )
 
         with open(f"{Certificate.create_dir_if_not_exist(self.path)}/{nonencrypted_key_path}", "wb") as f:
             f.write(private_key.private_bytes(
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PrivateFormat.TraditionalOpenSSL,
-                # encryption_algorithm=serialization.BestAvailableEncryption(b"lilly123"),
                 encryption_algorithm=serialization.NoEncryption(),
             ))
 
@@ -122,11 +125,11 @@ class Certificate:
 
 
 if __name__ == "__main__":
-    # dir_path = 'test123.lilly.com'
-    # cert_url = u'test123.lilly.com'
-    #
-    # cert = Certificate(path=dir_path, cert_url=cert_url)
-    # p_key = cert.generate_key()
-    # cert.generate_csr(key=p_key)
-    # cert.generate_self_signed_cert(key=p_key)
+    dir_path = 'test123.lilly.com'
+    cert_url = u'test123.lilly.com'
+
+    cert = Certificate(path=dir_path, cert_url=cert_url)
+    p_key = cert.generate_key()
+    cert.generate_csr(key=p_key)
+    cert.generate_self_signed_cert(key=p_key)
     pass
