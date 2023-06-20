@@ -6,8 +6,8 @@ python cert_client.py --folder output_folder --url example.lilly.com --method ke
 
 
 ```bash
-----folder -f path to output certificate file, default="cert_files"
---url -u SAN, default="example.lilly.com"
---method -m key+csr or key+csr+cert, default="key+csr"
+-f --folder path to output certificate file, default="cert_files"
+-u --url certificate common name and SAN, default="example.lilly.com"
+-m --method key+csr or key+csr+cert, default="key+csr"
 --passphras passphras for ca.key, default="PASSPHRASE"
 
