@@ -62,10 +62,10 @@ class Client(Certificate):
         print(f"Self-signed certificate: certificate.pem is created under: {self.path}, with url: {self.cert_url}")
 
         # create readme.txt
-        self.generate_readme(line=f"{self.cert_url}\n")
+        self.generate_readme(line=f"SAN: {self.cert_url}\n")
         self.generate_readme(line=f"ca.key - Encrypted Private key, passphrase: {self.passphrase_in_str}")
         self.generate_readme(line="key.pem - Non-encrypted Private key")
-        self.generate_readme(line="csr.pem - Self-signed Public key")
+        # self.generate_readme(line="csr.pem - Certificate Signing Request (including Self-signed Publickey)")
         self.generate_readme(line="certificate.pem - Self-signed Certificate")
         print(f"Readme file is created under: {self.path}")
 
