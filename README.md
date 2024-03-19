@@ -12,9 +12,16 @@ options:
 
 example:
 ```bash
-python cert_client.py --folder icontent.clientapp.lilly.com --url icontent.clientapp.lilly.com --pass PASSPHRASE123
+# MAC
+export url=lccppatient.lilly.cn
+python cert_client.py --folder $url --url $url
+
+# Win
+set url=ipharmacistadmin.lilly.cn
+python cert_client.py --folder $url --url $url
+
+# Win PS
+$url="edifile.lilly.cn"
+python cert_client.py --folder $url --url $url
 ```
 
-```bash
-cert_client.exe --folder icontent.clientapp.lilly.com --url icontent.clientapp.lilly.com
-```
