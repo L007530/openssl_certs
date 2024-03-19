@@ -16,7 +16,7 @@ example:
 export url=lccppatient.lilly.cn
 python cert_client.py --folder $url --url $url
 
-# Win
+# Win cmd
 set url=ipharmacistadmin.lilly.cn
 python cert_client.py --folder $url --url $url
 
