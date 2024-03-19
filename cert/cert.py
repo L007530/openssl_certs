@@ -63,7 +63,7 @@ class Certificate:
     def convert_str_to_bytestr(str_inputed):
         return bytes(str_inputed, 'utf-8')
 
-    def generate_readme(self, file_name='readme', line=''):
+    def generate_readme(self, file_name='README', line=''):
         with open(f"{Certificate.create_dir_if_not_exist(self.path)}/{file_name}_{self.cert_url}.txt", "a") as rdm:
             rdm.write(f"{line}\n")
 
